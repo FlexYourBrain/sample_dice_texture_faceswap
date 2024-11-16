@@ -1,0 +1,94 @@
+-- textures numbers
+go.property("face1", resource.texture("/assets/images/dice_f1.png"))
+go.property("face2", resource.texture("/assets/images/dice_f2.png"))
+go.property("face3", resource.texture("/assets/images/dice_f3.png"))
+go.property("face4", resource.texture("/assets/images/dice_f4.png"))
+go.property("face5", resource.texture("/assets/images/dice_f5.png"))
+go.property("face6", resource.texture("/assets/images/dice_f6.png"))
+-- textures dots
+go.property("dots1", resource.texture("/assets/images/dice_d1.png"))
+go.property("dots2", resource.texture("/assets/images/dice_d2.png"))
+go.property("dots3", resource.texture("/assets/images/dice_d3.png"))
+go.property("dots4", resource.texture("/assets/images/dice_d4.png"))
+go.property("dots5", resource.texture("/assets/images/dice_d5.png"))
+go.property("dots6", resource.texture("/assets/images/dice_d6.png"))
+local tex0 = "texture0"
+local side_1 = "/dice#side_1"
+local side_2 = "/dice#side_2"
+local side_3 = "/dice#side_3"
+local side_4 = "/dice#side_4"
+local side_5 = "/dice#side_5"
+local side_6 = "/dice#side_6"
+
+
+
+local function switch_face_texture(dice_url, new_texture, flag) 
+	-- dice_url is url to the model dice side / new_texture is a go.property resource texture / flag is input flag set in init
+	go.set(dice_url, tex0, new_texture)
+	flag = not flag
+	return flag
+end
+
+
+function init(self)
+	msg.post(".", "acquire_input_focus")
+	msg.post("@render:", "use_camera_projection")
+	msg.post("camera", "acquire_camera_focus")
+	msg.post("@render:", "clear_color", { color = vmath.vector4(0.1, 0.09, 0.1, 0) } )
+	
+	-- rotate the die
+	go.animate(".", "euler.z", go.PLAYBACK_LOOP_FORWARD, 360, go.EASING_INOUTQUAD, 6)
+	go.animate(".", "euler.x", go.PLAYBACK_LOOP_FORWARD, 360, go.EASING_INOUTQUAD, 9)
+	go.animate(".", "euler.y", go.PLAYBACK_LOOP_FORWARD, 360, go.EASING_INOUTQUAD, 12)
+
+	-- input flags just for switching between images from dots to number when false
+
+	self.side1_isdots = true
+	self.side2_isdots = true
+	self.side3_isdots = true
+	self.side4_isdots = true
+	self.side5_isdots = true
+	self.side6_isdots = true
+
+end
+
+
+function on_input(self, action_id, action)
+	if action_id == hash("one") and action.pressed then
+		if self.side1_isdots then
+			self.side1_isdots = switch_face_texture(side_1, self.face1, self.side1_isdots)
+		else
+			self.side1_isdots = switch_face_texture(side_1, self.dots1, self.side1_isdots)
+		end
+	elseif action_id == hash("two") and action.pressed then
+		if self.side2_isdots then
+			self.side2_isdots = switch_face_texture(side_2, self.face2, self.side2_isdots)
+		else
+			self.side2_isdots = switch_face_texture(side_2, self.dots2, self.side2_isdots)
+		end
+	elseif action_id == hash("three") and action.pressed then
+		if self.side3_isdots then
+			self.side3_isdots = switch_face_texture(side_3, self.face3, self.side3_isdots)
+		else
+			self.side3_isdots = switch_face_texture(side_3, self.dots3, self.side3_isdots)
+		end
+	elseif action_id == hash("four") and action.pressed then
+		if self.side4_isdots then
+			self.side4_isdots = switch_face_texture(side_4, self.face4, self.side4_isdots)
+		else
+			self.side4_isdots = switch_face_texture(side_4, self.dots4, self.side4_isdots)
+		end
+	elseif action_id == hash("five") and action.pressed then
+		if self.side5_isdots then
+			self.side5_isdots = switch_face_texture(side_5, self.face5, self.side5_isdots)
+		else
+			self.side5_isdots = switch_face_texture(side_5, self.dots5, self.side5_isdots)
+		end
+	elseif action_id == hash("six") and action.pressed then
+		if self.side6_isdots then
+			self.side6_isdots = switch_face_texture(side_6, self.face6, self.side6_isdots)
+		else
+			self.side6_isdots = switch_face_texture(side_6, self.dots6, self.side6_isdots)
+		end
+	end
+end
